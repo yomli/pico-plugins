@@ -7,8 +7,6 @@ Adds a contributors backend to Pico CMS, containing:
 + An online Markdown editor with preview and some Markdown insertion options
 + An inline image manager with upload, download, preview, and storing of additional meta (title, description per image) options
 
-![pico_contributors](screenshot.jpg)
-
 ## Install
 
 1. Copy the "pico_contributors" folder into your Pico's "plugins" folder
@@ -27,6 +25,8 @@ Contributors can:
 + upload, edit and delete images in their folder /content/images/_username_/
 
 ### Screenshots
+
+![pico_contributors](screenshot.jpg)
 
 ## Changelog
 
