@@ -1,0 +1,28 @@
+<div id="assetscontrols">
+    <form id="uploadForm" onchange="PicoContributors.Assets.uploadFormSubmit(this);" enctype="multipart/form-data" method="POST" action="contribute/upload">
+        <label for="upfile" class="icon fa-upload">&nbsp;lang.upload</label>
+        <input type="file" id="upfile" name="upfile" accept="image/*" />
+        <input type="hidden" id="uppath" name="uppath" value="{{ path_assets_full }}" />
+    </form>
+</div>
+<ul id="assetslist">
+    <li class="icon fa-folder"> {{ path_assets_rel }}</li>
+    {% for asset in assets %}
+        <li{% if asset.is_directory %}{% else %} class="imagefile" onmouseover="PicoContributors.Assets.showThumb('{{ asset.path_file_relative }}', '{{ asset.size }}', {{ asset.width }}, {{ asset.height }}, '{{ assets_meta[asset.filename].title }}', '{{ assets_meta[asset.filename].description }}' )" onmouseout="PicoContributors.Assets.hideThumb()"{% endif %}>
+
+            <a href="#" class="assetfile icon fa-{{ asset.icon }}" onclick="{% if asset.is_directory %}PicoContributors.Assets.init('{{ asset.path_file_full }}/'){% else %}PicoContributors.Assets.insertIntoPost('{{ asset.url_file }}', '{{ assets_meta[asset.filename].title }}', '{{ assets_meta[asset.filename].description }}'){% endif %}">&nbsp;{{ asset.filename }}</a>
+
+            <span class="showHovered rename icon fa-pencil" title="lang.assets.rename" onclick="PicoContributors.Assets.rename('{{ asset.path_file_full }}', {{ asset.is_directory ? 'true' : 'false' }})"></span>
+
+            {% if asset.is_directory %}{% else %}
+                <span  class="showHovered download icon fa-download" title="lang.assets.download" onclick="PicoContributors.Assets.download('{{ asset.path_file_full }}')"></span>
+
+                <span class="showHovered meta icon fa-info" title="lang.assets.meta" onclick="PicoContributors.Assets.editMeta('{{ asset.path_file_full }}', '{{ assets_meta[asset.filename].title }}', '{{ assets_meta[asset.filename].description }}')"></span>
+            {% endif %}
+
+            <span class="showHovered delete icon fa-trash" title="lang.assets.delete" onclick="PicoContributors.Assets.deleteFile('{{ asset.path_file_full }}', {{ asset.is_directory ? 'true' : 'false' }})"></span>
+
+        </li>
+    {% endfor %}
+</ul>
+<div id="assetimagepreview"></div>

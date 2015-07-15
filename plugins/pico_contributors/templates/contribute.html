@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="lang.global">
+<head>
+	<meta charset="utf-8" />
+	<title>Pico Contributors</title>
+	<link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic" />
+	<link rel="stylesheet" href="{{ base_url }}/plugins/pico_contributors/assets/css/pico_contributors.MERGED.css" type="text/css" />
+	<meta name="robots" content="noindex, nofollow" />
+	{% if is_initial_login %}<meta http-equiv="refresh" content="1">{% endif %}
+</head>
+<body>
+{% if is_initial_login %}
+	<div class="splashOuter">
+		<span class="splash">lang.login.welcome</span>
+	</div>
+{% else %}
+
+	<div id="saving">lang.saving…</div>
+	<div id="uploading">lang.uploading<span class="icon fa-spinner fa-pulse"></span></div>
+
+	<header>
+		<button class="left toggleMenu icon fa-navicon"> lang.menu <span class="anim icon fa-chevron-right"></span></button>
+		<button class="right toggleAssets icon fa-photo"> lang.assets.manager <span class="anim icon fa-chevron-down"></span></button>
+		<button class="right save icon fa-cloud-upload" title="lang.post.save"> lang.save</button>
+		<button class="right togglePreview icon fa-toggle-off" title="lang.toggle.preview"></button>
+	</header>
+
+	<nav id="menu">
+		<ul class="controls" data-intro="lang.intro.controls" data-step="1" data-tooltipClass="ml110 wider">
+			<li><a href="#" class="new" title="lang.post.new"><span class="icon fa-plus"></span></a></li>
+			<li><a href="#" class="refresh" title="lang.post.refresh-tree"><span class="icon fa-refresh"></span></a></li>
+			<li><a href="#" class="save" title="lang.post.save"><span class="icon icon fa-cloud-upload"></span></a></li>
+			<li><a href="#" class="show" title="lang.post.view.current"><span class="icon fa-eye"></span></a></li>
+			<li><a href="#" class="help" title="lang.guided-tour"><span class="icon fa-question-circle"></span></a></li>
+			<li><a href="{{ base_url }}/contribute/logout" class="logout" title="lang.logout"><span class="icon fa-power-off"></span></a></li>
+		</ul>
+
+		<h2>lang.pages</h2>
+		<ul class="pages" data-intro="lang.intro.navigation" data-step="2" data-position="right" data-tooltipClass="wider">
+			{% for page in pages %}
+			{% if page.parent_directories != false %}
+			{% for directory in page.parent_directories %}
+			<li style="margin-left:{{ directory.level * 1 }}em;">
+				<a href="#" data-url="{{ directory.data_url }}" class="icon fa-folder folder">&nbsp;{{ directory.name|slice(1) }}</a>
+			</li>
+			{% endfor %}
+			{% endif %}
+			<li style="margin-left:{{ page.level * 1 }}em;">
+				<a href="#" data-url="{{ page.url }}" class="post {% if openpost == page.path_absolute %}open{% endif %} icon fa-file">&nbsp;{{ page.path }}{% if page.path|length > 0 %}/{% endif %}{% if page.title %}{{ page.title }}{% else %}Untitled{% endif %}</a>
+				<a href="{{ page.url }}" target="_blank" class="view" title="lang.post.view"><span class="icon fa-eye"></span></a>
+				<a href="#" data-url="{{ page.url }}" class="delete" title="lang.post.delete"><span class="icon fa-trash"></span></a>
+			</li>
+			{% endfor %}
+		</ul>
+	</nav>
+
+		<div id="main">
+		<textarea id="editor"></textarea>
+
+		<div id="toolbar">
+			<button class="rte title icon fa-header" title="lang.rte.heading"></button>
+			<button class="rte bold icon fa-bold" title="lang.rte.bold"></button>
+			<button class="rte italic icon fa-italic" title="lang.rte.italic"></button>
+			<button class="rte strike icon fa-strikethrough" title="lang.rte.strikethrough"></button>
+			<button class="rte link icon fa-link" title="lang.rte.link"></button>
+			<button class="rte picture icon fa-picture-o" title="lang.rte.picture"></button>
+			<button class="rte blockquote icon fa-quote-left" title="lang.rte.quotation"></button>
+			<button class="rte code icon fa-code" title="lang.rte.code"></button>
+			<button class="rte ul icon fa-list-ul" title="lang.rte.list.bullets"></button>
+			<button class="rte ol icon fa-list-ol" title="lang.rte.list.numbered"></button>
+			<button class="rte hr icon fa-minus" title="lang.rte.line"></button>
+			<button class="rte table icon fa-table" title="lang.rte.table"></button>
+		</div>
+
+		<div id="preview">
+			<div class="inner"></div>
+		</div>
+	</div>
+
+	<aside id="assetsmanager" data-position="left" data-intro="lang.intro.assets" data-step="4" data-tooltipClass="wider">
+		<div id="assets"></div>
+
+	</aside>
+
+	<script src="{{ base_url }}/plugins/pico_contributors/assets/js/pico_contributors.MERGED.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			PicoContributors.init(
+				'{{ base_url }}',
+				$(this).attr('data-url'),
+				'{{ openpost }}', 
+				{
+					'confirmDeleteDirectory': 'lang.directory.delete.confirm',
+					'confirmDeleteFile'     : 'lang.file.delete.confirm',
+					'confirmDeletePost'     : 'lang.post.delete.confirm',
+					'directoryCreatePrompt' : 'lang.directory.create.prompt',
+					'promptNewPost'         : 'lang.post.new.prompt',
+					'promptRenameFile'      : 'lang.file.rename.prompt',
+					'promptRenameDirectory' : 'lang.directory.rename.prompt',
+					'promptMetaDescription' : 'lang.meta.description.prompt',
+					'promptMetaTitle'       : 'lang.meta.title.prompt',
+					'saved'                 : 'lang.saved',
+					'saving'                : 'lang.saving',
+					'title'                 : 'lang.title',
+					'description'           : 'lang.description',
+					'postView'				: 'lang.post.view',
+					'postDelete'			: 'lang.post.delete',
+					'nextLabel'				: 'lang.next &rarr;',
+					'prevLabel'				: '&larr; lang.prev',
+					'skipLabel'				: 'lang.skip',
+					'doneLabel'				: 'lang.done', 
+					'introEditor'			: 'lang.intro.editor',
+					rte : {
+						'text'				: 'lang.rte.text',
+						'url'				: 'lang.rte.url',
+						'table'				: 'lang.rte.table-insert',
+						'title'				: 'lang.rte.title'
+					}					
+				}
+
+			);
+
+			//test for touch events support and if not supported, attach .no-touch class to the HTML tag.
+ 
+			if (!("ontouchstart" in document.documentElement)) {
+				document.documentElement.className += " no-touch";
+			}
+		});
+	</script>
+
+{% endif %}
+</body>
+</html>
