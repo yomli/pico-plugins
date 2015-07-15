@@ -24,7 +24,7 @@ $config['theme'] = 'the-letter';
 Chrome, Firefox, Opera, Safari, IE8+.
 
 ## License
-This theme is free and open source software, distributed under the [MIT-Beerware License](LICENSE). So feel free to to modify this theme to suit your needs.
+This theme is free and open source software, distributed under the [MIT-Beerware License](LICENSE). So feel free to modify this theme to suit your needs.
 
 ### Third-party credits
 + CSS reset based on **[Normalize.css](https://necolas.github.io/normalize.css/)**,
