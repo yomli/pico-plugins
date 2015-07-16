@@ -485,6 +485,22 @@ Placing: ' . $this->getNextPlacingNumber() . '
 			// Delete asset file
 			if( is_file($file_url)) {
 				unlink($file_url);
+					// Update meta.php
+				$path     = str_replace($file, '', $file_url);
+				if( file_exists($path . 'meta.php') ) {
+					$meta = array();
+					include($path . 'meta.php');
+
+					if( array_key_exists($file, $meta)) {
+						$attributes = $meta[$filenameOld];
+						unset($meta[$file]);
+						file_put_contents($path . 'meta.php', '<?php $meta = ' . var_export($meta, true) . ';');
+					}
+				}
+					// Delete thumb file
+				if ( file_exists($path . '/thumbs' . $file) ) {
+					unlink($path . '/thumbs' . $file);
+				}
 			}
 		}
 		die();
@@ -547,8 +563,6 @@ Placing: ' . $this->getNextPlacingNumber() . '
 			rename($pathAbsoluteOld, $pathAbsoluteNew);
 
 			$pathAbsoluteThumbOld = str_replace($filename, 'thumbs/' . $filename, $pathAbsoluteOld);
-			// LOL. Really, I have no words to qualify how much I'm laughing right now. Commented.
-			// $pathAbsoluteThumbNew = str_replace($filename, 'thumbs/' . $filename, $pathAbsoluteNew);
 			$pathAbsoluteThumbNew = str_replace($filename, 'thumbs/' . $filenameNew, $pathAbsoluteOld);
 			rename($pathAbsoluteThumbOld, $pathAbsoluteThumbNew);
 		}

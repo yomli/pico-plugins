@@ -94,7 +94,7 @@ var PicoContributors = {
 				}
 			});
 
-			// On change wich is not save, we set a notification
+			// On change which is not save, we set a notification
 			PicoContributors.Editor.editor.on('change', function(e){
 				$('.save').addClass('modified');
 			});
