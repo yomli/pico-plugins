@@ -30,4 +30,5 @@ This theme is free and open source software, distributed under the [MIT-Beerware
 + CSS reset based on **[Normalize.css](https://necolas.github.io/normalize.css/)**,
 + **[HTML5Shiv](https://github.com/afarkas/html5shiv)** and **[Selectivzr](http://selectivizr.com/)** for IE8 support,
 + **[Respond.js](https://github.com/scottjehl/Respond)** for media queries support,
-+ Fast vanilla JS smooth scroll: **[SmoothScroll.js](https://github.com/alicelieutier/smoothScroll)**.
++ Fast vanilla JS smooth scroll: **[SmoothScroll.js](https://github.com/alicelieutier/smoothScroll)**,
++ Print styles based on **[HTML5 Boilerplate](https://html5boilerplate.com)**.
