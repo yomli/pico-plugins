@@ -43,6 +43,10 @@ class Pico_Contributors {
 		$this->passwords 		= '';
 		$this->contributorName	= '';
 		$this->dateFormat 		= 'Y/m/d';
+
+		if(session_id() == '') {
+			session_start();
+		}
 		
 		if(file_exists($this->plugin_path .'/contributors_config.php')){
 			global $pico_contributors_passwords;

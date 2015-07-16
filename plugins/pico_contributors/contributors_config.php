@@ -14,7 +14,7 @@ $pico_contributors_date = 'Y/m/d';
  * If true, merge CSS files and JS files
  * on every request
  */
-$pico_contributors_devMode = true; 
+$pico_contributors_devMode = false; 
 
 /* 
  * Here you can manage your several contributors.
