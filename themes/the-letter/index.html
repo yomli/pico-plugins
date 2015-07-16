@@ -29,7 +29,7 @@
 </head>
 <body id="top">
 
-	<header id="header" role="banner">
+	<header id="header">
 		<h1><a href="{{ base_url }}">{{ site_title }}</a></h1>
 		<nav>
 			<a href="#" class="menu-icon"></a>
@@ -43,7 +43,7 @@
 		</nav>
 	</header>
 
-	<main id="content" role="main">
+	<main id="content">
 		{% if is_front_page %}
 		{% for page in pages %}
 		{% if page.date and not(page.url == base_url~'/') %}
@@ -86,7 +86,7 @@
 
 	<a href="#top" title="Back to top" id="toTop">&uArr;</a>
 	
-	<footer id="footer" role="contentinfo">
+	<footer id="footer">
 		<p>
 			Theme made by <a href="http://www.guillaumelitaudon.fr/">Guillaume Litaudon</a> for <a href="http://www.picocms.org/">Pico CMS</a> – View on <a href="https://github.com/yomli/pico-plugins/tree/master/themes/the-letter">GitHub</a>
 		</p>
