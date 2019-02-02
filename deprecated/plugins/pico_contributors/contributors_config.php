@@ -1,14 +1,7 @@
 <?php
 
 global $pico_contributors_passwords;
-global $pico_contributors_date;
 global $pico_contributors_devMode;
-
-/**
- * Set the PHP date format as described here:
- * http://php.net/manual/en/function.strftime.php
- */
-$pico_contributors_date = 'Y/m/d';
 
 /**
  * If true, merge CSS files and JS files

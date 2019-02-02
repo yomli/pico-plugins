@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+	<title>{% if meta.title %}{{ meta.title }} – {% endif %}{{ site_title }}</title>
+	{% if meta.description %}
+	<meta name="description" content="{{ meta.description }}" /> 
+	{% endif %}{% if meta.robots %}
+	<meta name="robots" content="{{ meta.robots }}" />
+	{% endif %}
+	{% if meta.author %}
+	<meta name="author" content="{{ meta.author }}" />
+	{% endif %}
+	<meta name="copyright" content="MIT-Beerware" />
+
+	<link rel="shortcut icon" href="{{ theme_url }}/img/favicon.png" />
+
+	<link rel="stylesheet" href="{{ theme_url }}/css/style.css" type="text/css" />
+	<link rel="stylesheet" href="{{ theme_url }}/css/style.authors.css" type="text/css" />
+	
+	<script src="{{ theme_url }}/js/respond.min.js"></script>
+	
+	<!--[if lt IE 9]>
+    	<script src="{{ theme_url }}/js/html5shiv.min.js"></script>
+    	<script src="{{ theme_url }}/js/selectivizr.min.js"></script>
+	<![endif]-->
+</head>
+<body id="top">
+
+	<header id="header">
+		<h1><a href="{{ base_url }}">{{ site_title }}</a></h1>
+		<nav>
+			<a href="#" class="menu-icon"></a>
+			<ul>
+				{% for page in pages %}
+				{% if not(page.date) and not(page.url == base_url~'/') %}
+				<li><a href="{{ page.url }}">{{ page.title }}</a></li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+		</nav>
+	</header>
+
+	<main id="content">
+		{% if is_front_page %}
+		{% for page in pages %}
+		{% if page.date and not(page.url == base_url~'/') %}
+			<article class="author {{ page.author }}">
+				<header>
+					<p>{{ page.date_formatted }}</p>
+					<h1><a href="{{ page.url }}">{{ page.title }}</a></h1>
+				</header>
+
+				{{ page.content }}
+
+				<footer>
+					<p>{{ page.author }}</p>
+				</footer>
+			</article>
+		{% endif %}
+		{% endfor %}
+		{% else %}
+			<article class="author {% if meta.author %}{{ meta.author }}{% endif %}">
+				<header>
+					{% if meta.date %}
+					<p>{{ meta.date_formatted }}</p>
+					{% endif %}
+					{% if meta.title %}
+					<h1>{{ meta.title }}</h1>
+					{% endif %}
+				</header>
+					{{ content }}
+				{% if meta.date %}
+				<footer>
+					{% if meta.author %}
+					<p>{{ meta.author }}</p>
+					{% endif %}
+					<a href="{{ base_url }}">Back to all letters</a>
+				</footer>
+				{% endif %}
+			</article>
+		{% endif %}
+	</main>
+
+	<a href="#top" title="Back to top" id="toTop">&uArr;</a>
+	
+	<footer id="footer">
+		<p>
+			Theme made by <a href="http://www.guillaumelitaudon.fr/">Guillaume Litaudon</a> for <a href="http://www.picocms.org/">Pico CMS</a> – View on <a href="https://github.com/yomli/pico-plugins/tree/master/themes/the-letter">GitHub</a>
+		</p>
+	</footer>
+
+	<script src="{{ theme_url }}/js/smoothscroll.min.js"></script>
+    
+</body>
+</html>

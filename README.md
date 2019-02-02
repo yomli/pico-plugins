@@ -3,10 +3,10 @@
 A bunch of plugins and themes for [Pico CMS](http://picocms.org/).
 
 ## Plugins
-+ [pico_contributors](plugins/pico_contributors/) – _Backend for multiple authors_
++ [PicoParsedownExtraPlugin](plugins/PicoParsedownExtraPlugin/) – _Parsedown Extra extended_
 
-## Themes
-+ [The Letter](themes/the-letter/)
+## Deprecated
+Pre-1.0 plugins and themes are stored here.
 
 ## License
 Licensed under the terms of the MIT-Beerware license.

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Pico Contributors plugin for Pico CMS
+ * Pico Administrators plugin for Pico CMS
  *
  * Based on Pico Admin plugin
  * by Kay Stenschke
@@ -11,21 +11,21 @@
  * @version 1.2.0
  */
 
-class Pico_Contributors {
+class Pico_Administrators {
 	private $is_devMode = true;  // true: merge CSS files and JS files new on every request
 
 	private $basePath;
 
-	private $is_contributor;
+	private $is_administrator;
 
 	private $is_logout;
 	private $plugin_path;
 	private $dateFormat;
 
 	private $passwords;
-	private $contributorName;
+	private $administratorName;
 
-	const PLUGIN_DIRECTORY_NAME = 'pico_contributors';
+	const PLUGIN_DIRECTORY_NAME = 'pico_administrators';
 
 	/**
 	 * Constructor
@@ -38,25 +38,23 @@ class Pico_Contributors {
 		require_once($this->plugin_path . '/lib/helper_server.php');
 		require_once($this->plugin_path . '/lib/helper_files.php');
 
-		$this->is_contributor	= false;
+		$this->is_administrator	= false;
 		$this->is_logout 		= false;
 		$this->passwords 		= '';
-		$this->contributorName	= '';
+		$this->administratorName	= '';
 		$this->dateFormat 		= 'Y/m/d';
 
 		if(session_id() == '') {
 			session_start();
 		}
 		
-		if(file_exists($this->plugin_path .'/contributors_config.php')){
-			global $pico_contributors_passwords;
-			global $pico_contributors_date;
-			global $pico_contributors_devMode;
+		if(file_exists($this->plugin_path .'/administrators_config.php')){
+			global $pico_administrators_passwords;
+			global $pico_administrators_devMode;
 
-			include_once($this->plugin_path .'/contributors_config.php');
-			$this->passwords = $pico_contributors_passwords;
-			$this->dateFormat = $pico_contributors_date;
-			$this->is_devMode = $pico_contributors_devMode;
+			include_once($this->plugin_path .'/administrators_config.php');
+			$this->passwords = $pico_administrators_passwords;
+			$this->is_devMode = $pico_administrators_devMode;
 		} else {
 			die($this->lang('error.config.missing'));
 		}
@@ -70,51 +68,51 @@ class Pico_Contributors {
 	public function request_url(&$url)
 	{
 		switch($url) {
-			case 'contribute':   // login into contributor area?
-				$this->is_contributor = true;
+			case 'administrate':   // login into administrator area?
+				$this->is_administrator = true;
 				break;
 
-			case 'contribute/new':
+			case 'administrate/new':
 				$this->do_new();
 				break;
 
-			case 'contribute/open':
+			case 'administrate/open':
 				$this->do_open();
 				break;
 
-			case 'contribute/save':
+			case 'administrate/save':
 				$this->do_save();
 				break;
 
-			case 'contribute/remove':
+			case 'administrate/remove':
 				$this->do_delete();
 				break;
 
-			case 'contribute/download':
+			case 'administrate/download':
 				$this->do_download();
 				break;
 
-			case 'contribute/rename':
+			case 'administrate/rename':
 				$this->do_rename();
 				break;
 
-			case 'contribute/assets':
+			case 'administrate/assets':
 				$this->do_render_assetsmanager();
 				break;
 
-			case 'contribute/upload':
+			case 'administrate/upload':
 				$this->do_upload();
 				break;
 
-			case 'contribute/metatitle':
+			case 'administrate/metatitle':
 				$this->do_metatitle();
 				break;
 
-			case 'contribute/metadescription':
+			case 'administrate/metadescription':
 				$this->do_metadescription();
 				break;
 
-			case 'contribute/logout':
+			case 'administrate/logout':
 				$this->is_logout = true;
 				break;
 		}
@@ -129,12 +127,12 @@ class Pico_Contributors {
 	{
 		if($this->is_logout){
 			session_destroy();
-			header('Location: '. $twig_vars['base_url'] .'/contribute');
+			header('Location: '. $twig_vars['base_url'] .'/administrate');
 			exit;
 		}
 
-		$template = 'contribute';
-		if($this->is_contributor){
+		$template = 'administrate';
+		if($this->is_administrator){
 			header($_SERVER['SERVER_PROTOCOL'].' 200 OK'); // Override 404 header
 
 			$loader = new Twig_Loader_Filesystem($this->plugin_path);
@@ -144,14 +142,14 @@ class Pico_Contributors {
 				$twig_vars['login_error'] = $this->lang('error.no.password');
 				$template = 'login';
 
-			} elseif(!isset($_SESSION['pico_contributors_logged_in']) || !$_SESSION['pico_contributors_logged_in']) {
+			} elseif(!isset($_SESSION['pico_administrators_logged_in']) || !$_SESSION['pico_administrators_logged_in']) {
 				if(isset($_POST['password']) && isset($_POST['username'])){
-					$this->contributorName = $_POST['username'];
-					if( hash('sha256', $_POST['password']) == $this->passwords[$this->contributorName]
-						&& ( ! array_key_exists('pico_contributors_logged_in', $_SESSION) || $_SESSION['pico_contributors_logged_in'] !== true)
+					$this->administratorName = $_POST['username'];
+					if( hash('sha256', $_POST['password']) == $this->passwords[$this->administratorName]
+						&& ( ! array_key_exists('pico_administrators_logged_in', $_SESSION) || $_SESSION['pico_administrators_logged_in'] !== true)
 						){
-							$_SESSION['pico_contributor'] = $this->contributorName;
-							$_SESSION['pico_contributors_logged_in']     = true;
+							$_SESSION['pico_administrator'] = $this->administratorName;
+							$_SESSION['pico_administrators_logged_in']     = true;
 							$twig_vars['is_initial_login']  = true;
 				} else {
 					$twig_vars['login_error'] = $this->lang('error.invalid.password');
@@ -170,13 +168,13 @@ class Pico_Contributors {
 		
 
 
-			echo Pico_Contributors_Helper_Strings::translate($twig_editor->render('templates/' . $template . '.html', $twig_vars)); // Render contribute.html or login.html
+			echo Pico_Administrators_Helper_Strings::translate($twig_editor->render('templates/' . $template . '.html', $twig_vars)); // Render administrate.html or login.html
 			exit; // Don't continue to render template
 		}
 	}
 
 	/**
-	 * Merge CSS files into 'pico_contributors.all.css'
+	 * Merge CSS files into 'pico_administrators.all.css'
 	 *
 	 * @note relative paths, eg. to background-images, are not remapped
 	 */
@@ -186,9 +184,9 @@ class Pico_Contributors {
 			'assets/css/normalize.css',
 			'assets/css/codemirror.css',
 			'assets/css/introjs.css',
-			'assets/css/pico_contributors.css'
+			'assets/css/pico_administrators.css'
 			);
-		$this->mergeFiles($files, $this->plugin_path . '/assets/css/pico_contributors.MERGED.css');
+		$this->mergeFiles($files, $this->plugin_path . '/assets/css/pico_administrators.MERGED.css');
 	}
 
 	private function mergeJsFiles(){
@@ -198,15 +196,15 @@ class Pico_Contributors {
 			'assets/js/marked.js',
 			'assets/js/jquery.min.js',
 			'assets/js/introjs.min.js',
-			'assets/js/pico_contributors.js'
+			'assets/js/pico_administrators.js'
 			);
-		$this->mergeFiles($files, $this->plugin_path . '/assets/js/pico_contributors.MERGED.js');
+		$this->mergeFiles($files, $this->plugin_path . '/assets/js/pico_administrators.MERGED.js');
 	}
 
 	/**
-	 * Concatenate contents of given files (paths are given relative to pico contributors plugin 
+	 * Concatenate contents of given files (paths are given relative to pico administrators plugin 
 	 * directory) and save result to a new file
-	 * Is run only if the merge-file does not exist yet, or Pico_Contributors::is_devMode is true
+	 * Is run only if the merge-file does not exist yet, or Pico_Administrators::is_devMode is true
 	 *
 	 * @param   array   $filePaths
 	 * @param   string  $mergedFile
@@ -226,16 +224,16 @@ class Pico_Contributors {
 
 	/**
 	 * Extend the "pages" array with more data
-	 * and hide pages not from the contributor 
+	 * and hide pages not from the administrator 
 	 *
 	 * @param   array   $pages
 	 * @return  array
 	 */
 	private function extendPageTree(array $pages){
 
-		$protocol = Pico_Contributors_Helper_Server::getProtocol();
-		$basePath = Pico_Contributors_Helper_Server::getCurrentUrl(true);
-		$urlRoot  = Pico_Contributors_Helper_Server::getUrlRoot($this->basePath);
+		$protocol = Pico_Administrators_Helper_Server::getProtocol();
+		$basePath = Pico_Administrators_Helper_Server::getCurrentUrl(true);
+		$urlRoot  = Pico_Administrators_Helper_Server::getUrlRoot($this->basePath);
 
 			// List paths NOT to be displayed in the tree up-front
 		$listedPaths            = array(
@@ -250,8 +248,8 @@ class Pico_Contributors {
 
 			$page  = str_replace($urlRoot, substr(CONTENT_DIR, 0, strlen(CONTENT_DIR)-1), $pageData['url']);
 
-			// Check if the path contains the contributorName or is a directory
-			if( strpos($page, '-' . $_SESSION['pico_contributor']) !== false 
+			// Check if the path contains the administratorName or is a directory
+			if( strpos($page, '-' . $_SESSION['pico_administrator']) !== false 
 				|| is_dir($page) ){
 				$page .= ! is_file($page . CONTENT_EXT) ? 'index' . CONTENT_EXT : CONTENT_EXT;
 				
@@ -270,10 +268,10 @@ class Pico_Contributors {
 				// $pageData['level']          = substr_count($page, '/') - 4;
 				$pageData['level']          = substr_count($pathRelFromContentRoot, '/');
 
-				if( Pico_Contributors_Helper_Strings::endsWith($page, 'index.md') ) {
+				if( Pico_Administrators_Helper_Strings::endsWith($page, 'index.md') ) {
 					// is index page of root or a subdirectory
 					continue;
-					// if(! Pico_Contributors_Helper_Strings::endsWith($pageData['url'], '/')) {
+					// if(! Pico_Administrators_Helper_Strings::endsWith($pageData['url'], '/')) {
 					// 	$pageData['url'] .= '/';
 					// }
 				}
@@ -317,18 +315,18 @@ class Pico_Contributors {
 
 		$title  = isset($_POST['title']) && $_POST['title'] ? strip_tags(urldecode($_POST['title'])) : '';
 		// Filename will be timestamp-name, eg. 20150703204143-yomli.md
-		$filename = date('YmdGis') . '-' . $_SESSION['pico_contributor'];
+		$filename = date('YmdGis') . '-' . $_SESSION['pico_administrator'];
 
 		$folders= array();
 		if( strpos($title, '/')) {
 			$folders= explode('/', $title);
 			$title = array_pop($folders);
 		}
-		$file = Pico_Contributors_Helper_Strings::slugify(basename($filename));
+		$file = Pico_Administrators_Helper_Strings::slugify(basename($filename));
 		if(!$file) die(json_encode(array('error' =>  $this->lang('error.invalid.filename'))));
 		
 		$error = '';
-		if( ! Pico_Contributors_Helper_Strings::endsWith($file, CONTENT_EXT)) {
+		if( ! Pico_Administrators_Helper_Strings::endsWith($file, CONTENT_EXT)) {
 			$file .= CONTENT_EXT;
 		}
 		$content = '';
@@ -378,7 +376,7 @@ class Pico_Contributors {
 		return '/*
 ' . $this->lang('warning.meta.data') . '
 Title: '. $title . '
-Author: ' . $_SESSION['pico_contributor'] . '
+Author: ' . $_SESSION['pico_administrator'] . '
 Date: ' . date($this->dateFormat) . '
 Placing: ' . $this->getNextPlacingNumber() . '
 */';
@@ -401,7 +399,7 @@ Placing: ' . $this->getNextPlacingNumber() . '
 
 		list($file_url, $pathFile, $file) = $this->getFileParamsFromPost();
 
-		$path = Pico_Contributors_Helper_Strings::endsWith($file_url, CONTENT_EXT)
+		$path = Pico_Administrators_Helper_Strings::endsWith($file_url, CONTENT_EXT)
 		? $file_url
 		: (CONTENT_DIR . $pathFile . $file );
 
@@ -455,11 +453,11 @@ Placing: ' . $this->getNextPlacingNumber() . '
 			$path .= '/index';
 		}
 
-		if(! Pico_Contributors_Helper_Strings::endsWith($path, CONTENT_EXT)) {
+		if(! Pico_Administrators_Helper_Strings::endsWith($path, CONTENT_EXT)) {
 			$path .= CONTENT_EXT;
 		}
 
-		while( Pico_Contributors_Helper_Strings::endsWith($path, CONTENT_EXT . CONTENT_EXT) ) {
+		while( Pico_Administrators_Helper_Strings::endsWith($path, CONTENT_EXT . CONTENT_EXT) ) {
 			$path = substr($path, 0, strlen($path) - 3);
 		}
 
@@ -485,6 +483,7 @@ Placing: ' . $this->getNextPlacingNumber() . '
 			// Delete asset file
 			if( is_file($file_url)) {
 				unlink($file_url);
+
 					// Update meta.php
 				$path     = str_replace($file, '', $file_url);
 				if( file_exists($path . 'meta.php') ) {
@@ -514,7 +513,7 @@ Placing: ' . $this->getNextPlacingNumber() . '
 		$this->checkLoggedIn();
 
 		$pathFile = urldecode($_GET['file']);
-		Pico_Contributors_Helper_Files::download($pathFile, substr($pathFile, strrpos($pathFile, '/') + 1 ));
+		Pico_Administrators_Helper_Files::download($pathFile, substr($pathFile, strrpos($pathFile, '/') + 1 ));
 	}
 
 	/**
@@ -563,6 +562,8 @@ Placing: ' . $this->getNextPlacingNumber() . '
 			rename($pathAbsoluteOld, $pathAbsoluteNew);
 
 			$pathAbsoluteThumbOld = str_replace($filename, 'thumbs/' . $filename, $pathAbsoluteOld);
+			// LOL. Really, I have no words to qualify how much I'm laughing right now. Commented.
+			// $pathAbsoluteThumbNew = str_replace($filename, 'thumbs/' . $filename, $pathAbsoluteNew);
 			$pathAbsoluteThumbNew = str_replace($filename, 'thumbs/' . $filenameNew, $pathAbsoluteOld);
 			rename($pathAbsoluteThumbOld, $pathAbsoluteThumbNew);
 		}
@@ -633,7 +634,7 @@ Placing: ' . $this->getNextPlacingNumber() . '
 	{
 		$file_url   = isset($_POST['file']) && $_POST['file'] ? $_POST['file'] : '';
 
-		$pathFile   = Pico_Contributors_Helper_Files::getFilePath( Pico_Contributors_Helper_Server::getCurrentUrl(true), $file_url );
+		$pathFile   = Pico_Administrators_Helper_Files::getFilePath( Pico_Administrators_Helper_Server::getCurrentUrl(true), $file_url );
 		$pathFile   = ltrim( str_replace($_SERVER[ 'SERVER_NAME' ] . '/' . $this->basePath, '', $pathFile), '/');
 
 		$file       = basename(strip_tags($file_url));
@@ -652,13 +653,13 @@ Placing: ' . $this->getNextPlacingNumber() . '
 	{
 		$this->checkLoggedIn();
 
-		if( ! is_dir(CONTENT_DIR . 'images/' . $_SESSION['pico_contributor']) ) {
-			if(! mkdir(CONTENT_DIR . 'images/' . $_SESSION['pico_contributor']) ) {
-				die($this->lang('error.check.perms') . CONTENT_DIR . 'images/' . $_SESSION['pico_contributor']);
+		if( ! is_dir(CONTENT_DIR . 'images/' . $_SESSION['pico_administrator']) ) {
+			if(! mkdir(CONTENT_DIR . 'images/' . $_SESSION['pico_administrator']) ) {
+				die($this->lang('error.check.perms') . CONTENT_DIR . 'images/' . $_SESSION['pico_administrator']);
 			}
 		}
 
-		$pathAssets     = array_key_exists('file', $_POST) ? $_POST['file'] : CONTENT_DIR . 'images/' . $_SESSION['pico_contributor'] . '/';
+		$pathAssets     = array_key_exists('file', $_POST) ? $_POST['file'] : CONTENT_DIR . 'images/' . $_SESSION['pico_administrator'] . '/';
 		$pathAssetsRel  = str_replace(dirname(getcwd()) , '', $pathAssets);
 
 		/** @var  array $meta */
@@ -674,14 +675,14 @@ Placing: ' . $this->getNextPlacingNumber() . '
 		$twig_editor_assets = new Twig_Environment($loader);
 		$twig_vars = array(
 			'base_path'         => $this->basePath,
-			'can_browse_up'     => strlen($pathAssetsRel) < 7 || ! substr($pathAssetsRel, -7) === 'images/' . $_SESSION['pico_contributor'] . '/',  // ends w/ "images/"?
+			'can_browse_up'     => strlen($pathAssetsRel) < 7 || ! substr($pathAssetsRel, -7) === 'images/' . $_SESSION['pico_administrator'] . '/',  // ends w/ "images/"?
 			'path_assets_full'  => $pathAssets,
 			'path_assets_rel'   => $pathAssetsRel,
 			'assets'            => $assets,
 			'assets_meta'       => $meta
 			);
 
-		die(Pico_Contributors_Helper_Strings::translate($twig_editor_assets->render('templates/assetsmanager.html', $twig_vars)));
+		die(Pico_Administrators_Helper_Strings::translate($twig_editor_assets->render('templates/assetsmanager.html', $twig_vars)));
 	}
 
 	/**
@@ -717,13 +718,13 @@ Placing: ' . $this->getNextPlacingNumber() . '
 					$mimeType       = $isDirectory ? 'directory' : finfo_file($fileInfoMime, $filePathFull);
 
 					$assets[ ($isDirectory ? '0' : '' /* list directories topmost */) . $filename ] = array(
-						'is_root'           => Pico_Contributors_Helper_Strings::endsWith($filePathFull, 'content/images') ? 1 : 0,
+						'is_root'           => Pico_Administrators_Helper_Strings::endsWith($filePathFull, 'content/images') ? 1 : 0,
 						'is_directory'      => $isDirectory,
-						'size'              => $isDirectory ? '' : Pico_Contributors_Helper_Strings::formatBytes(filesize($filePathFull)),
+						'size'              => $isDirectory ? '' : Pico_Administrators_Helper_Strings::formatBytes(filesize($filePathFull)),
 						'filename'          => $filename,
 						'path_file_full'    => $filePathFull,
 						'path_file_relative'=> str_replace(getcwd(), '', $filePathFull),
-						'url_file'          => Pico_Contributors_Helper_Server::getUrlRoot($this->basePath) . '/' . str_replace(ROOT_DIR, '', $filePathFull),
+						'url_file'          => Pico_Administrators_Helper_Server::getUrlRoot($this->basePath) . '/' . str_replace(ROOT_DIR, '', $filePathFull),
 						'path'              => $path,
 						'mime'              => $mimeType,
 						'icon'              => $isDirectory ? 'folder' : (strpos($mimeType, 'image') !== false ? 'picture-o' : 'file')
@@ -787,7 +788,7 @@ Placing: ' . $this->getNextPlacingNumber() . '
 		$filenameLower = strtolower($pathImage);
 
 		$image          = null;
-		$fileExtension  = Pico_Contributors_Helper_Files::getFileExtension($filenameLower);
+		$fileExtension  = Pico_Administrators_Helper_Files::getFileExtension($filenameLower);
 		switch($fileExtension) {
 			case 'png':
 			$image = imagecreatefrompng($pathImage);
@@ -820,8 +821,8 @@ Placing: ' . $this->getNextPlacingNumber() . '
 	 */
 	private function checkLoggedIn()
 	{
-		if( !isset( $_SESSION[ 'pico_contributors_logged_in' ] ) || !$_SESSION[ 'pico_contributors_logged_in' ] ) {
-			header('Location: contribute');
+		if( !isset( $_SESSION[ 'pico_administrators_logged_in' ] ) || !$_SESSION[ 'pico_administrators_logged_in' ] ) {
+			header('Location: administrate');
 		}
 	}
 
@@ -854,7 +855,7 @@ Placing: ' . $this->getNextPlacingNumber() . '
 			}
 
 			// Check file size with PHP limit
-			if( $_FILES[ 'upfile' ][ 'size' ] > Pico_Contributors_Helper_Server::getMaxFileUpload() ) {
+			if( $_FILES[ 'upfile' ][ 'size' ] > Pico_Administrators_Helper_Server::getMaxFileUpload() ) {
 				throw new RuntimeException($this->lang('error.filesize.limit'));
 			}
 
@@ -885,7 +886,7 @@ Placing: ' . $this->getNextPlacingNumber() . '
 	 * Translate messages of this file as well.
 	 */
 	private function lang($message = 'global') {
-		return Pico_Contributors_Helper_Strings::translate('lang.' . $message);
+		return Pico_Administrators_Helper_Strings::translate('lang.' . $message);
 	}
 
 }
