@@ -36,8 +36,6 @@ class PicoParsedownExtraPlugin extends AbstractPicoPlugin
      */
     public function onConfigLoaded(array &$config)
     {
-        // your code
-        // See https://github.com/bricebou/PicoSyntaxHighlighter/blob/master/PicoSyntaxHighlighter.php
         if (isset($config['PicoParsedownExtraPlugin'])) {
             $this->pluginConfig = $config['PicoParsedownExtraPlugin'];
         }

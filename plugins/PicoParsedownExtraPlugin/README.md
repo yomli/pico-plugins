@@ -22,6 +22,10 @@ PicoParsedownExtraPlugin:
     code_class: 'language-%s'
 ~~~
 
+### Not working
+
+I had to disable the parsing of the footnote elements in order to bypass the footnotes-rendered-as-text issue. See [https://github.com/picocms/Pico/issues/476](https://github.com/picocms/Pico/issues/476). If we use ParsedownExtra-Plugin with Parsedown 1.8 and Parsedown Extra 0.8 we don't get the fix.
+
 ## License
 Licensed under the terms of the MIT-Beerware license.
 See the [LICENSE](LICENSE) file for license rights and limitations.
