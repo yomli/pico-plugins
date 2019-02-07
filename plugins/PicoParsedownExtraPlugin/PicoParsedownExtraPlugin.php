@@ -61,7 +61,7 @@ class PicoParsedownExtraPlugin extends AbstractPicoPlugin
         if (is_file($pluginPath . '/ParsedownExtraPlugin/ParsedownExtraPlugin.php')) {
             require_once $pluginPath . '/ParsedownExtraPlugin/ParsedownExtraPlugin.php';
         } else {
-            die("plugins/PicoParsedownExtraPlugin/ParsedownExtraPlugin.php not found.");
+            die("plugins/PicoParsedownExtraPlugin/ParsedownExtraPlugin/ParsedownExtraPlugin.php not found.");
         }
 
         $parsedown = new ParsedownExtraPlugin();

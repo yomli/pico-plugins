@@ -3,7 +3,8 @@
 A bunch of plugins and themes for [Pico CMS](http://picocms.org/).
 
 ## Plugins
-+ [PicoParsedownExtraPlugin](plugins/PicoParsedownExtraPlugin/) – _Parsedown Extra extended_
++ [PicoParsedownExtraPlugin](plugins/PicoParsedownExtraPlugin/) – _Parsedown Extra extended._
++ [PicoTypographer](plugins/PicoTypographer/) – _Provides typographic enhancements._
 
 ## Deprecated
 Pre-1.0 plugins and themes are stored here.

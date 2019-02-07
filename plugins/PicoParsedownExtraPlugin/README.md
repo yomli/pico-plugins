@@ -22,9 +22,10 @@ PicoParsedownExtraPlugin:
     code_class: 'language-%s'
 ~~~
 
-### Not working
+### Troubleshooting needed
 
-I had to disable the parsing of the footnote elements in order to bypass the footnotes-rendered-as-text issue. See [https://github.com/picocms/Pico/issues/476](https://github.com/picocms/Pico/issues/476). If we use ParsedownExtra-Plugin with Parsedown 1.8 and Parsedown Extra 0.8 we don't get the fix.
+- I had to disable the parsing of the footnote elements in order to bypass the footnotes-rendered-as-text issue. See [https://github.com/picocms/Pico/issues/476](https://github.com/picocms/Pico/issues/476). If we use ParsedownExtra-Plugin with Parsedown 1.8 and Parsedown Extra 0.8 we don't get the fix.
+- You may get a PHP error like `Notice: Undefined index: openerLength in vendor\erusev\parsedown\Parsedown.php on line 501` if you use `{}` in a quote. Don't know why. Page renders correctly, though.
 
 ## License
 Licensed under the terms of the MIT-Beerware license.
